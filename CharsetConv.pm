@@ -2,7 +2,8 @@
 ###
 # AxKit XSP taglib for character conversion
 # Robin Berjon <robin@knowscape.com>
-# 18/07/2001 - v.0.01
+# 03/08/2001 - v0.02
+# 18/07/2001 - v0.01
 ###
 
 package AxKit::XSP::CharsetConv;
@@ -10,7 +11,7 @@ use strict;
 use Apache::AxKit::CharsetConv  qw();
 
 use vars qw($VERSION $NS);
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 use base qw(Apache::AxKit::Language::XSP);
 
@@ -28,6 +29,8 @@ sub parse_start {
     my %attr = @_;
 
     if ($tag eq 'charset-convert') {
+        $attr{from} ||= 'iso-8859-1';
+        $attr{to}   ||= 'utf-8';
         $e->append_to_script("{ #start charset-convert\n");
         $e->append_to_script("  my \$charconv = Apache::AxKit::CharsetConv->new('$attr{from}','$attr{to}');\n");
         $e->append_to_script("  my \$to_convert = ''");
@@ -107,6 +110,12 @@ the output of your XSP.
 There is only one tag provided by this taglib: charset-convert. It
 has two mandatory attributes, from and to, which are the character
 codes to convert (surprise) from and to.
+
+The to attribute defaults to UTF-8, which usually makes sense. The from
+attribute on the other hand defaults to ISO-8859-1. While this default
+is very eurocentric, it would have been an arbitrary choice no matter
+what my choice would have been... so I picked the one that's most
+useful to me :-)
 
 =head1 AUTHOR
 
